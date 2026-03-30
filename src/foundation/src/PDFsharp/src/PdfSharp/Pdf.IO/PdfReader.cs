@@ -417,8 +417,10 @@ namespace PdfSharp.Pdf.IO
                     }
                 }
 
-#if PDFSHARP_DEBUG
             ContinueWithoutOwnerPassword:
+
+#if PDFSHARP_DEBUG
+                // Debug-specific logic can be added here if needed
 #endif
 
                 // 4. Read all Objects streams and the references to the objects saved in them.
