@@ -394,8 +394,16 @@ namespace PdfSharp.Pdf.IO
                             if (PdfSharpDebug.Instance.AllowOpenWithUserPasswordOnly)
                                 goto ContinueWithoutOwnerPassword;
 #endif
+#if PDFSHARP_ALLOW_MODIFY_WITHOUT_OWNER_PASSWORD
+                            // PdfSharp.Unlocked fork: Allow modifying documents opened with user password only.
+                            // The encryption will be reset when saving, producing an unencrypted PDF.
+                            // This behavior can be disabled by setting PdfSharpAllowModifyWithoutOwnerPassword=false
+                            // in Directory.Build.props or Local.Build.props.
+                            goto ContinueWithoutOwnerPassword;
+#else
                             if (!_options.AllowModifyWithoutOwnerPassword)
                                 throw new PdfReaderException(PsMsgs.OwnerPasswordRequired);
+#endif
                         }
                     }
                     // ReSharper restore RedundantIfElseBlock
@@ -409,8 +417,10 @@ namespace PdfSharp.Pdf.IO
                     }
                 }
 
-#if PDFSHARP_DEBUG
             ContinueWithoutOwnerPassword:
+
+#if PDFSHARP_DEBUG
+                // Debug-specific logic can be added here if needed
 #endif
 
                 // 4. Read all Objects streams and the references to the objects saved in them.
